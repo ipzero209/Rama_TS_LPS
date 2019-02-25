@@ -45,6 +45,34 @@ def getSD(num_list):
     return sd
 
 
+def nonZero(num_list):
+    """Returns the number of samples that are 0."""
+    zc = 0
+    nz_samples = []
+    for num in num_list:
+        if num == 0:
+            zc += 1
+        else:
+            nz_samples.append(num)
+    nz_avg = getAverage(nz_samples)
+    return zc,nz_avg
+
+
+def capCheck(model, mode, in_rate, stdev):
+    """Checks the calculated ingtestion rate (avg + SD) against model
+    capacity."""
+    capacities = {'Panorama':{'management-only':0,'panorama':10000,'logger':15000},
+                  'M-100':{'management-only':0,'Panorama':10000,'logger':15000},
+                  'M-200':{'management-only':0,'panorama':10000,'logger':28000},
+                  'M-500':{'management-only':0,'panorama':15000,'logger':30000},
+                  'M-600':{'management-only':0,'panorama':25000,'logger':55000}}
+    capacity = capacities[model][mode]
+    if (in_rate + stdev) > capacity:
+        return 1
+    else:
+        return 0
+
+
 
 def main():
     if len(sys.argv) < 2:
@@ -60,9 +88,15 @@ def main():
             ts_text = ts_file.extractfile(file)
             for line in ts_text:
                 if 'model' in line:
-                    line = line.split(':')
+                    line = line.split(': ')
                     if ('Panorama' or 'M-100' or 'M-200' or 'M-500' or 'M-600') in line[1]:
-                        print "This TS came from a Panorama. We can proceed."
+                        model = line[1].strip('\n')
+                        print "This TS came from a Panorama. Checking operational" \
+                              " mode."
+                        for m_line in ts_text:
+                            if "system-mode" in m_line:
+                                m_line = m_line.split(": ")
+                                mode = m_line[1].strip('\n')
                     else:
                         print "This TS file is not from a Panorama. Exiting."
                         exit(1)
@@ -83,10 +117,29 @@ def main():
     print "Low: {0:.2f}".format(low)
 
     average = getAverage(samples)
-    print "Average incoming log rate is {0:.2f}".format(average)
+    print "Average incoming log rate is {0:.2f}.".format(average)
 
     stdev = getSD(samples)
     print "Standard deviation is {0:.2f}".format(stdev)
+
+    num_zeros , nz_avg = nonZero(samples)
+    zero_pct = num_zeros / len(samples)
+    print "The average above includes {} samples with a value of 0.".format(num_zeros)
+
+    print "This number represents {0:.2f}" \
+          " of the total number of samples. If this number is greater than" \
+          " 5, please investigate.".format(zero_pct)
+
+    print "The average of all non-zero samples is {0:.2f}".format(nz_avg)
+
+
+    cap = capCheck(model, mode, average, stdev)
+    if cap == 1:
+        print "===================================="
+        print "The average + 1 stddev is greater than the capacity of this " \
+              "model/mode of Panorama."
+
+
 
 
 
