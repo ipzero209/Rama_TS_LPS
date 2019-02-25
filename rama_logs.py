@@ -138,7 +138,7 @@ def main():
         print "===================================="
         print "The average + 1 stddev is greater than the capacity of this " \
               "model/mode of Panorama."
-
+        print "===================================="
 
 
 
