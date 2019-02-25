@@ -3,12 +3,46 @@
 
 import sys
 import tarfile
+import math
 
 
 
 
 
+def getHigh(num_list):
+    """Returns the highest value in the sample list."""
+    h_val = 0
+    for num in num_list:
+        if num > h_val:
+            h_val = num
+    return h_val
 
+
+def getLow(num_list):
+    """Returns the lowest value in the sample list."""
+    l_val = 80000
+    for num in num_list:
+        if num < l_val:
+            l_val = num
+    return l_val
+
+
+def getAverage(num_list):
+    """Returns the average value of the sample list."""
+    avg = sum(num_list) / len(num_list)
+    return avg
+
+
+def getSD(num_list):
+    """Returns the standard deviation of the sample list."""
+    avg = getAverage(num_list)
+    mean_diff = []
+    for num in num_list:
+        mds = (num - avg)**2
+        mean_diff.append(mds)
+    mds_avg = getAverage(mean_diff)
+    sd = math.sqrt(mds_avg)
+    return sd
 
 
 
@@ -42,9 +76,18 @@ def main():
                     sample = float(line[1].strip('\n'))
                     samples.append(sample)
 
+    high = getHigh(samples)
+    print "High: {0:.2f}".format(high)
 
-    average = sum(samples) / len(samples)
+    low = getLow(samples)
+    print "Low: {0:.2f}".format(low)
+
+    average = getAverage(samples)
     print "Average incoming log rate is {0:.2f}".format(average)
+
+    stdev = getSD(samples)
+    print "Standard deviation is {0:.2f}".format(stdev)
+
 
 if __name__ == "__main__":
     main()
