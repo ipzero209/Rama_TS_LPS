@@ -98,7 +98,7 @@ def main():
             for line in ts_text:
                 if 'model' in line:
                     line = line.split(': ')
-                    if ('Panorama' or 'M-100' or 'M-200' or 'M-500' or 'M-600') in line[1]:
+                    if 'Panorama' or 'M-100' or 'M-200' or 'M-500' or 'M-600' in line[1]:
                         model = line[1].strip('\n')
                         print "This TS came from a Panorama. Checking operational" \
                               " mode."
