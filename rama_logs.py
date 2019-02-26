@@ -73,6 +73,15 @@ def capCheck(model, mode, in_rate, stdev):
         return 0
 
 
+def getCap(model, mode):
+    """Returns the ingestion rate for the model/mode provided."""
+    capacities = {'Panorama': {'management-only': 0, 'panorama': 10000, 'logger': 15000},
+                  'M-100': {'management-only': 0, 'Panorama': 10000, 'logger': 15000},
+                  'M-200': {'management-only': 0, 'panorama': 10000, 'logger': 28000},
+                  'M-500': {'management-only': 0, 'panorama': 15000, 'logger': 30000},
+                  'M-600': {'management-only': 0, 'panorama': 25000, 'logger': 55000}}
+    capacity = capacities[model][mode]
+    return capacity
 
 def main():
     if len(sys.argv) < 2:
@@ -110,6 +119,12 @@ def main():
                     sample = float(line[1].strip('\n'))
                     samples.append(sample)
 
+
+
+    print "\n========================================"
+
+    print "Total number of samples: {}".format(str(len(samples)))
+
     high = getHigh(samples)
     print "High: {0:.2f}".format(high)
 
@@ -120,7 +135,7 @@ def main():
     print "Average incoming log rate is {0:.2f}.".format(average)
 
     stdev = getSD(samples)
-    print "Standard deviation is {0:.2f}".format(stdev)
+    print "Standard deviation is {0:.2f}\n\n".format(stdev)
 
     num_zeros , nz_avg = nonZero(samples)
     zero_pct = num_zeros / len(samples)
@@ -130,7 +145,21 @@ def main():
           " of the total number of samples. If this number is greater than" \
           " 5, please investigate.".format(zero_pct)
 
-    print "The average of all non-zero samples is {0:.2f}".format(nz_avg)
+    # print "The average of all non-zero samples is {0:.2f}".format(nz_avg)
+
+    print "========================================\n"
+
+    print "\n========================================"
+    capacity = getCap(model, mode)
+    usage = average + stdev
+    usage_pct = ((average + stdev) / capacity) * 100
+    print "Platform usage as of this TS file is:\n{0:.2f}".format(usage)
+    print "---------"
+    print "{}\n".format(capacity)
+    print "or {0:.2f}% capacity.\n\n".format(usage_pct)
+    print "The top number represents the simple average ingestion rate + 1 standard deviation."
+
+    print "========================================\n"
 
 
     cap = capCheck(model, mode, average, stdev)
