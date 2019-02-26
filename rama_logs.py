@@ -126,7 +126,7 @@ def main():
     zero_pct = num_zeros / len(samples)
     print "The average above includes {} samples with a value of 0.".format(num_zeros)
 
-    print "This number represents {0:.2f}" \
+    print "This number represents {0:.2f}%" \
           " of the total number of samples. If this number is greater than" \
           " 5, please investigate.".format(zero_pct)
 
