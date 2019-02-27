@@ -139,11 +139,10 @@ def main():
 
     num_zeros , nz_avg = nonZero(samples)
     zero_pct = num_zeros / len(samples)
-    print "The average above includes {} samples with a value of 0.".format(num_zeros)
+    print "The average above includes {} samples with a value of 0. If this" \
+          " number is greater than 5, please investigate.".format(num_zeros)
 
-    print "This number represents {0:.2f}%" \
-          " of the total number of samples. If this number is greater than" \
-          " 5, please investigate.".format(zero_pct)
+    print "This number represents {0:.2f}% of the total number of samples.".format(zero_pct)
 
     # print "The average of all non-zero samples is {0:.2f}".format(nz_avg)
 
