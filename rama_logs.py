@@ -62,7 +62,7 @@ def capCheck(model, mode, in_rate, stdev):
     """Checks the calculated ingtestion rate (avg + SD) against model
     capacity."""
     capacities = {'Panorama':{'management-only':0,'panorama':10000,'logger':15000},
-                  'M-100':{'management-only':0,'Panorama':10000,'logger':15000},
+                  'M-100':{'management-only':0,'panorama':10000,'logger':15000},
                   'M-200':{'management-only':0,'panorama':10000,'logger':28000},
                   'M-500':{'management-only':0,'panorama':15000,'logger':30000},
                   'M-600':{'management-only':0,'panorama':25000,'logger':55000}}
@@ -76,7 +76,7 @@ def capCheck(model, mode, in_rate, stdev):
 def getCap(model, mode):
     """Returns the ingestion rate for the model/mode provided."""
     capacities = {'Panorama': {'management-only': 0, 'panorama': 10000, 'logger': 15000},
-                  'M-100': {'management-only': 0, 'Panorama': 10000, 'logger': 15000},
+                  'M-100': {'management-only': 0, 'panorama': 10000, 'logger': 15000},
                   'M-200': {'management-only': 0, 'panorama': 10000, 'logger': 28000},
                   'M-500': {'management-only': 0, 'panorama': 15000, 'logger': 30000},
                   'M-600': {'management-only': 0, 'panorama': 25000, 'logger': 55000}}
